@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 74 - Análisis de Rutas</title>
+    <style>
+        body { font-family: sans-serif; padding: 24px; }
+        ul { line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <h1>Ejercicio 74: Normalización y Análisis de Ruta</h1>
+    <ul id="detalle-ruta"></ul>
+
+    <script>
+        const baseDir = "/app/proyecto";
+        const rutaRelativa = "./carpeta/../docs/./informe.anual.pdf";
+
+        function normalizarRuta(ruta) {
+            const partes = ruta.split("/");
+            const pila = [];
+            for (const parte of partes) {
+                if (parte === "" || parte === ".") continue;
+                if (parte === "..") {
+                    pila.pop();
+                } else {
+                    pila.push(parte);
+                }
+            }
+            return pila.join("/");
+        }
+
+        const normalizada = normalizarRuta(rutaRelativa);
+        const rutaAbsoluta = `${baseDir}/${normalizada}`;
+        const partesAbs = rutaAbsoluta.split("/");
+        const basename = partesAbs[partesAbs.length - 1];
+        const extname = basename.includes(".") ? basename.slice(basename.lastIndexOf(".")) : "";
+        const dirname = partesAbs.slice(0, -1).join("/");
+
+        console.log({ rutaRelativa, normalizada, rutaAbsoluta, dirname, basename, extname });
+
+        const ul = document.getElementById("detalle-ruta");
+        [
+            `Ruta relativa original: ${rutaRelativa}`,
+            `Ruta normalizada: ${normalizada}`,
+            `Ruta absoluta: ${rutaAbsoluta}`,
+            `Directorio contenedor (dirname): ${dirname}`,
+            `Nombre de archivo (basename): ${basename}`,
+            `Extensión (extname): ${extname}`
+        ].forEach((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            ul.appendChild(li);
+        });
+    </script>
+</body>
+</html>
